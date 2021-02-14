@@ -1,30 +1,14 @@
+/*
+  File: services/index.js
+  Description: Functions that connect with the API
+*/
 import axios from "axios";
 
-export const getStations = async (filteredNetworks, setStations, stations) => {
-  console.log("entrou");
-  const newStations = [];
-  new Promise((resolve) => {
-    filteredNetworks.map((f, idx) => {
-      axios
-        .get(`https://api.citybik.es${f.href}`)
-        .then((res) => {
-          newStations.push(res.data.network);
-          console.log("dentro-map");
-          if (newStations.length === filteredNetworks.length) {
-            console.log("acabou");
-            resolve();
-          }
-        })
-        .catch((error) => console.log("dentro", error));
-    });
-  })
-    .then((res) => {
-      console.log("sair");
-      setStations(newStations);
-    })
-    .catch((error) => console.log("fora", error));
-};
-
+/*
+  Function: getNetworks
+  Input: Functions to set countries state
+  Output: State set with an array of countries and its respective networks
+*/
 export const getNetworks = async (setCountries) => {
   await axios
     .get("http://api.citybik.es/v2/networks?fields=id,location,href")
@@ -46,6 +30,30 @@ export const getNetworks = async (setCountries) => {
       setCountries(countryList);
     })
     .catch((err) => {
-      console.log("NE", err);
+      console.log("Error - Networks", err);
     });
+};
+
+/*
+  Function: getStations
+  Input: Array of networks from the selected country and functions to set networks state
+  Output: State set with an array of networks and its respective stations
+*/
+export const getStations = async (filteredNetworks, setNetworks) => {
+  const newStations = [];
+  new Promise((resolve) => {
+    filteredNetworks.map((f, idx) => {
+      axios
+        .get(`https://api.citybik.es${f.href}`)
+        .then((res) => {
+          newStations.push(res.data.network);
+          if (newStations.length === filteredNetworks.length) {
+            resolve();
+          }
+        })
+        .catch((error) => console.log("Error - Stations", error));
+    });
+  }).then((res) => {
+    setNetworks(newStations);
+  });
 };
