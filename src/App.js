@@ -81,114 +81,132 @@ const App = () => {
   }, [networks]);
 
   return (
-    <div className="App">
-      <p className="App-header">Map Challenge</p>
-      <div className="Map-container">
-        <MapContainer
-          center={mapCenter}
-          zoom={mapZoom}
-          maxZoom={20}
-          zoomControl={true}
-          doubleClickZoom={true}
-          scrollWheelZoom={true}
-          dragging={true}
-          animate={true}
-          easeLinearity={0.35}
-        >
-          <LayersControl position="topright">
-            <TileLayer
-              url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-              attribution={"Field-Tryout"}
-            />
-            <LayersControl.Overlay checked name="Networks per country">
-              <LayerGroup>
-                {countries.length > 0 &&
-                  countries.map((c, idx) => (
-                    <Marker
-                      position={[
-                        c.networks[0].location.latitude,
-                        c.networks[0].location.longitude,
-                      ]}
-                      eventHandlers={{
-                        click: () => {
-                          handleNetworks(idx);
-                        },
-                      }}
-                    >
-                      <Tooltip>
-                        Country:{c.country} <br />
-                        {c.networks.length} networks
-                      </Tooltip>
-                    </Marker>
-                  ))}
-              </LayerGroup>
-            </LayersControl.Overlay>
-            {showNetworks && (
-              <LayerGroup>
-                {networks.length > 0 &&
-                  networks.map((n, idx) => (
-                    <Marker
-                      position={[n.location.latitude, n.location.longitude]}
-                      icon={greenIcon}
-                      eventHandlers={{
-                        click: () => {
-                          setShowNetworks(false);
-                          setShowStations(true);
-                          setSelectedNet(n);
-                        },
-                      }}
-                    >
-                      <Tooltip>
-                        Country: {n.location.country} <br />
-                        Network:{n.name} <br />
-                        {n.stations.length} stations
-                      </Tooltip>
-                    </Marker>
-                  ))}
-              </LayerGroup>
-            )}
-            {showStations && (
-              <LayerGroup>
-                {selectedNet &&
-                  selectedNet.stations.length > 0 &&
-                  selectedNet.stations.map((s, idx) => (
-                    <Marker
-                      position={[s.latitude, s.longitude]}
-                      icon={goldIcon}
-                      eventHandlers={{
-                        click: () => {
-                          setShowNetworks(true);
-                          setShowStations(false);
-                          setSelectedNet(null);
-                        },
-                      }}
-                    >
-                      <Tooltip>
-                        Country: {selectedNet.location.country} <br />
-                        Network: {selectedNet.name} <br />
-                        Station: {s.name} <br />
-                        {s.extra.address
-                          ? `Address: ${s.extra.address}`
-                          : ""}{" "}
-                        <br />
-                        -Free bikes: {s.free_bikes} <br />
-                        -Empty slots: {s.empty_slots} <br />
-                      </Tooltip>
-                    </Marker>
-                  ))}
-              </LayerGroup>
-            )}
-          </LayersControl>
-        </MapContainer>
-        <div className="Map-info">
-          <p>Blue: Countries</p>
-          <p>Green: Networks</p>
-          <p>Yellow: Stations</p>
-          <h3>Guide:</h3>
-          <p>1 - Select Country</p>
-          <p>2 - Select Network</p>
-          <p>3 - Stations Details on the tooltip</p>
-          <p>Obs: Click on station to go back to networks</p>
+    <div className="App container">
+      <nav class="navbar navbar-light bg-light col-12">
+        <span class="navbar-brand mb-0 h1">Map Challenge - Field Tryout</span>
+      </nav>
+      <div className="row">
+        <div className="col-8">
+          <MapContainer
+            center={mapCenter}
+            zoom={mapZoom}
+            maxZoom={20}
+            zoomControl={true}
+            doubleClickZoom={true}
+            scrollWheelZoom={true}
+            dragging={true}
+            animate={true}
+            easeLinearity={0.35}
+          >
+            <LayersControl position="topright">
+              <TileLayer
+                url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                attribution={"Field-Tryout"}
+              />
+              <LayersControl.Overlay checked name="Networks per country">
+                <LayerGroup>
+                  {countries.length > 0 &&
+                    countries.map((c, idx) => (
+                      <Marker
+                        position={[
+                          c.networks[0].location.latitude,
+                          c.networks[0].location.longitude,
+                        ]}
+                        eventHandlers={{
+                          click: () => {
+                            handleNetworks(idx);
+                          },
+                        }}
+                      >
+                        <Tooltip>
+                          Country:{c.country} <br />
+                          {c.networks.length} networks
+                        </Tooltip>
+                      </Marker>
+                    ))}
+                </LayerGroup>
+              </LayersControl.Overlay>
+              {showNetworks && (
+                <LayerGroup>
+                  {networks.length > 0 &&
+                    networks.map((n, idx) => (
+                      <Marker
+                        position={[n.location.latitude, n.location.longitude]}
+                        icon={greenIcon}
+                        eventHandlers={{
+                          click: () => {
+                            setShowNetworks(false);
+                            setShowStations(true);
+                            setSelectedNet(n);
+                          },
+                        }}
+                      >
+                        <Tooltip>
+                          Country: {n.location.country} <br />
+                          Network:{n.name} <br />
+                          {n.stations.length} stations
+                        </Tooltip>
+                      </Marker>
+                    ))}
+                </LayerGroup>
+              )}
+              {showStations && (
+                <LayerGroup>
+                  {selectedNet &&
+                    selectedNet.stations.length > 0 &&
+                    selectedNet.stations.map((s, idx) => (
+                      <Marker
+                        position={[s.latitude, s.longitude]}
+                        icon={goldIcon}
+                        eventHandlers={{
+                          click: () => {
+                            setShowNetworks(true);
+                            setShowStations(false);
+                            setSelectedNet(null);
+                          },
+                        }}
+                      >
+                        <Tooltip>
+                          Country: {selectedNet.location.country} <br />
+                          Network: {selectedNet.name} <br />
+                          Station: {s.name} <br />
+                          {s.extra.address
+                            ? `Address: ${s.extra.address}`
+                            : ""}{" "}
+                          <br />
+                          -Free bikes: {s.free_bikes} <br />
+                          -Empty slots: {s.empty_slots} <br />
+                        </Tooltip>
+                      </Marker>
+                    ))}
+                </LayerGroup>
+              )}
+            </LayersControl>
+          </MapContainer>
+        </div>
+        <div className="col-3">
+          <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Countries</div>
+          </div>
+          <div class="card text-white bg-success mb-3">
+            <div class="card-header">Networks</div>
+          </div>
+          <div class="card text-white bg-warning mb-3">
+            <div class="card-header">Stations</div>
+          </div>
+          <div class="card">
+            <div class="card-header">Guide:</div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">1 - Select Country</li>
+              <li class="list-group-item">2 - Select Network</li>
+              <li class="list-group-item">
+                3 - Stations Details on the tooltip
+              </li>
+            </ul>
+            <div class="card-footer">
+              Obs: Click on station to go back to networks
+            </div>
+          </div>
         </div>
       </div>
     </div>
